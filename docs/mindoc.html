@@ -80,21 +80,23 @@
   </style>
  </head>
  <body>
-  <h1 id="<a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>">
-   <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>
+  <h1 id="mindoc_py">
+   <a style="color: #555; text-decoration: none;" href="#mindoc_py">mindoc.py</a>
   </h1>
   A minimalistic python documentation module
   <br/>
   <ul>
    <li>
-    <a href="https://minchulkim87.github.io/<a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>/">
+    <a href="https://minchulkim87.github.io/mindoc/">
      GitHub page
     </a>
+    <br/>
    </li>
    <li>
-    <a href="https://github.com/minchulkim87/<a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>">
+    <a href="https://github.com/minchulkim87/mindoc">
      Source code
     </a>
+    <br/>
    </li>
   </ul>
   This program converts a .py file into a .html file to minimally document python code.
@@ -107,7 +109,7 @@
   <br/>
   
 <h3 style="color: #555" id="toc">Table of Contents</h3>
-<p style="margin-top:0px; margin-bottom: 0px; margin-left: 0px;"><a style="color: #333; " href="#<a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>"><a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a></a></p>
+<p style="margin-top:0px; margin-bottom: 0px; margin-left: 0px;"><a style="color: #333; " href="#mindoc_py"><a style="color: #555; text-decoration: none;" href="#mindoc_py">mindoc.py</a></a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 20px;"><a style="color: #333; " href="#requirements"><a style="color: #555; text-decoration: none;" href="#requirements">Requirements</a></a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#packages"><a style="color: #555; text-decoration: none;" href="#packages">Packages</a></a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#_py_code_style"><a style="color: #555; text-decoration: none;" href="#_py_code_style">.py Code style</a></a></p>
@@ -205,21 +207,21 @@
   <br/>
   <blockquote>
    pip install git+
-   <a href="https://github.com/minchulkim87/<a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>.git@master">
-    https://github.com/minchulkim87/<a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>.git@master
+   <a href="https://github.com/minchulkim87/mindoc.git@master">
+    https://github.com/minchulkim87/mindoc.git@master
    </a>
    <br/>
   </blockquote>
   Then use the command from terminal
   <br/>
   <blockquote>
-   <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a> [-w] [file to the .py file to convert, can use glob]
+   mindoc [-w] [file to the .py file to convert, can use glob]
    <br/>
   </blockquote>
   For example:
   <br/>
   <blockquote>
-   <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a> <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>.py
+   mindoc <a style="color: #555; text-decoration: none;" href="#mindoc_py">mindoc.py</a>
    <br/>
   </blockquote>
   produces this documentation.
@@ -227,7 +229,7 @@
   <em>
    Without
   </em>
-  installing <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>,  you would need to install the required packages above.
+  installing mindoc,  you would need to install the required packages above.
   <br/>
   I assume they can be installed with the following:
   <br/>
@@ -239,17 +241,17 @@
   </blockquote>
   <ol>
    <li>
-    Download the <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>.py file to the directory you are working in.
+    Download the <a style="color: #555; text-decoration: none;" href="#mindoc_py">mindoc.py</a> file to the directory you are working in.
    </li>
    <li>
-    Open your terminal and navigate to the directory where the <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>.py file is.
+    Open your terminal and navigate to the directory where the <a style="color: #555; text-decoration: none;" href="#mindoc_py">mindoc.py</a> file is.
    </li>
    <li>
     Type the following command into the terminal
    </li>
   </ol>
   <blockquote>
-   python -m <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a> [-w] [file path to the .py file to convert, can use glob]
+   python -m mindoc [-w] [file path to the .py file to convert, can use glob]
    <br/>
   </blockquote>
   <h1 id="the_code">
@@ -327,13 +329,14 @@ import mistune
   </button>
   <div class="content" style=" margin-top:0px;">
    <pre><code class="prettyprint lang-python">def convert_python_blocks(code: str) -&gt; str:
-    replace_with_pre = u'&lt;'+u'br'+u'&gt;'+u'&lt;'+u'br'+u'&gt;'+u'&lt;'+u'button type="button" class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;"'+u'&gt;'+u'View code'+u'&lt;'+u'/button'+u'&gt;'+u'&lt;'+u'div style=" margin-top:0px;" class="content"'+u'&gt;'+u'\n```'+u'python\n'
+    replace_with_pre = u'&lt;'+u'br'+u'/&gt;'+u'&lt;'+u'br'+u'/&gt;'+u'&lt;'+u'button type="button" class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;"'+u'&gt;'+u'View code'+u'&lt;'+u'/button'+u'&gt;'+u'&lt;'+u'div style=" margin-top:0px;" class="content"'+u'&gt;'+u'\n```'+u'python\n'
     replace_with_post = u'```\n'+u'&lt;'+u'/div'+u'&gt;\n'
 
     pre_html = code.replace('"""'+'\n', '', 1)
     pre_html = replace_every_nth(pre_html, '"""'+'\n', replace_with_pre, nth=2)
     pre_html = pre_html.replace('"""'+'\n', replace_with_post)
     pre_html = pre_html + replace_with_post
+    pre_html = pre_html.replace('\n\n', '\n'+u'&lt;'+'br'+u'/&gt;'+'\n')
     return pre_html
 </code></pre>
   </div>
@@ -361,10 +364,10 @@ import mistune
         body { width: 90%; max-width: 1200px; margin: auto; font-family: Helvetica, arial, sans-serif; font-size: 14px; line-height: 1.6; padding-top: 10px; padding-bottom: 10px; background-color: white; padding: 10px; color: #333; }
         body &gt; *:first-child { margin-top: 0 !important; }
         body &gt; *:last-child { margin-bottom: 0 !important; }
-        a { color: #4183C4; }
+        a { color: #4183C4; margin-top: 0; margin-bottom: 0; }
         a.absent { color: #cc0000; }
         a.anchor { display: block; padding-left: 30px; margin-left: -30px; cursor: pointer; position: absolute; top: 0; left: 0; bottom: 0; }
-        h1, h2, h3, h4, h5, h6 { margin: 20px 0 10px; padding: 0; font-weight: bold; -webkit-font-smoothing: antialiased; cursor: text; position: relative; }
+        h1, h2, h3, h4, h5, h6 { margin: 20px 0 5px; padding: 0; font-weight: bold; -webkit-font-smoothing: antialiased; cursor: text; position: relative; }
         h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor { background: no-repeat 10px center; text-decoration: none; }
         h1 tt, h1 code { font-size: inherit; }
         h2 tt, h2 code { font-size: inherit; }
@@ -378,7 +381,7 @@ import mistune
         h4 { font-size: 16px; }
         h5 { font-size: 14px; }
         h6 { color: #777777; font-size: 14px; }
-        p, blockquote, ul, ol, dl, li, table, pre { margin: 15px 0; }
+        p, blockquote, ul, ol, dl, li, table, pre { margin: 10px 0; }
         hr { background: transparent repeat-x 0 0; border: 0 none; color: #cccccc; height: 4px; padding: 0; }
         body &gt; h2:first-child { margin-top: 0; padding-top: 0; }
         body &gt; h1:first-child { margin-top: 0; padding-top: 0; }
@@ -472,7 +475,7 @@ import mistune
     body = mistune.markdown(pre_html)
     body = body.replace('class="lang-python"', 'class="prettyprint lang-python"')
     body = body.replace(u'&lt;'+u'p'+u'&gt;', '')
-    body = body.replace(u'&lt;'+u'/p'+u'&gt;', u'&lt;'+u'br'+u'&gt;')
+    body = body.replace(u'&lt;'+u'/p'+u'&gt;', u'&lt;'+u'br'+u'/&gt;')
     start_string = u'&lt;'+u'br'+u'&gt;'
     end_string = u'&lt;'+u'pre'+u'&gt;'
     body = re.sub(start_string+r'[\w\W]'+end_string+r'*', end_string, body)
@@ -521,6 +524,7 @@ def create_toc(html: str) -&gt; str:
     header_list = []
     skip_first = 1
     tag_number = 1
+
     for header in soup.findAll(['h1', 'h2', 'h3', 'h4']):
         header['id'] = header.string.replace(' ','_').replace('.','_').lower()
         header_list.append((header.string, header['id']))
@@ -537,9 +541,11 @@ def create_toc(html: str) -&gt; str:
         # link back to toc
         if tag_number &gt; skip_first:
             new_tag = soup.new_tag("a")
-            new_tag.attrs['style'] = "font-size: 10px; color: #555; margin-top: 0px;"
+            new_tag.attrs['style'] = "font-size: 10px; color: #555;"
             new_tag.attrs['href'] = "#toc"
             new_tag.append("TOC")
+            br = soup.new_tag("br")
+            new_tag.insert_after(br)
             br = soup.new_tag("br")
             header.insert_after(br)
             header.insert_after(new_tag)
@@ -608,9 +614,9 @@ def save_as(content, file_path):
    TOC
   </a>
   <br/>
-  Unfortunately, for now you need to copy this <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>.py file into a folder that you are working in to use it.
+  Unfortunately, for now you need to copy this <a style="color: #555; text-decoration: none;" href="#mindoc_py">mindoc.py</a> file into a folder that you are working in to use it.
   <br/>
-  Using the terminal, you would also need to navigate to the folder where the <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a>.py file is.
+  Using the terminal, you would also need to navigate to the folder where the <a style="color: #555; text-decoration: none;" href="#mindoc_py">mindoc.py</a> file is.
   <br/>
   <h3 id="some_options">
    <a style="color: #555; text-decoration: none;" href="#some_options">Some options</a>
@@ -624,7 +630,7 @@ def save_as(content, file_path):
   For example:
   <br/>
   <blockquote>
-   <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a> ./*.py
+   mindoc ./*.py
    <br/>
   </blockquote>
   If you are continuing to write the documentation and would like the changes to be continuously reflected in the generated .html file, use the watch option.
@@ -632,7 +638,7 @@ def save_as(content, file_path):
   For example:
   <br/>
   <blockquote>
-   <a style="color: #555; text-decoration: none;" href="#mindoc">mindoc</a> -w ./*.py
+   mindoc -w ./*.py
    <br/>
   </blockquote>
   <h3 id="output">

@@ -1,9 +1,10 @@
 """
-# mindoc
+# mindoc.py
 
 A minimalistic python documentation module
 
 * [GitHub page](https://minchulkim87.github.io/mindoc/)
+
 * [Source code](https://github.com/minchulkim87/mindoc)
 
 This program converts a .py file into a .html file to minimally document python code.
@@ -20,13 +21,17 @@ This tool also helps automatically generate a table of contents and cross-refere
 
 ### Packages
 
+
 I tried to minimise the dependencies by using standard python libraries or standard packages within the Anaconda distribution. If you are not using the Anaconda distribution, these packages are required on top of the standard python libraries.
 
 * **mistune**: part of the Anaconda distribution
 * **beautifulsoup4**: part of the Anaconda distribution
 
 
+
 ### .py Code style
+
+
 
 The .py file to be converted must have been written in the following very specific way:
 
@@ -44,6 +49,7 @@ You cannot use fenced triplet of double quotes as code if you want to document t
 
 
 ## How to use
+
 
 Install from github.
 
@@ -108,13 +114,14 @@ def get_py_code(file_path) -> str:
 This function also "separates" what is documentation from what is code.
 """
 def convert_python_blocks(code: str) -> str:
-    replace_with_pre = u'<'+u'br'+u'>'+u'<'+u'br'+u'>'+u'<'+u'button type="button" class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;"'+u'>'+u'View code'+u'<'+u'/button'+u'>'+u'<'+u'div style=" margin-top:0px;" class="content"'+u'>'+u'\n```'+u'python\n'
+    replace_with_pre = u'<'+u'br'+u'/>'+u'<'+u'br'+u'/>'+u'<'+u'button type="button" class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;"'+u'>'+u'View code'+u'<'+u'/button'+u'>'+u'<'+u'div style=" margin-top:0px;" class="content"'+u'>'+u'\n```'+u'python\n'
     replace_with_post = u'```\n'+u'<'+u'/div'+u'>\n'
     
     pre_html = code.replace('"""'+'\n', '', 1)
     pre_html = replace_every_nth(pre_html, '"""'+'\n', replace_with_pre, nth=2)
     pre_html = pre_html.replace('"""'+'\n', replace_with_post)
     pre_html = pre_html + replace_with_post
+    pre_html = pre_html.replace('\n\n', '\n'+u'<'+'br'+u'/>'+'\n')
     return pre_html
 
 """
@@ -131,10 +138,10 @@ def convert_to_html(pre_html: str) -> str:
         body { width: 90%; max-width: 1200px; margin: auto; font-family: Helvetica, arial, sans-serif; font-size: 14px; line-height: 1.6; padding-top: 10px; padding-bottom: 10px; background-color: white; padding: 10px; color: #333; }
         body > *:first-child { margin-top: 0 !important; }
         body > *:last-child { margin-bottom: 0 !important; }
-        a { color: #4183C4; }
+        a { color: #4183C4; margin-top: 0; margin-bottom: 0; }
         a.absent { color: #cc0000; }
         a.anchor { display: block; padding-left: 30px; margin-left: -30px; cursor: pointer; position: absolute; top: 0; left: 0; bottom: 0; }
-        h1, h2, h3, h4, h5, h6 { margin: 20px 0 10px; padding: 0; font-weight: bold; -webkit-font-smoothing: antialiased; cursor: text; position: relative; }
+        h1, h2, h3, h4, h5, h6 { margin: 20px 0 5px; padding: 0; font-weight: bold; -webkit-font-smoothing: antialiased; cursor: text; position: relative; }
         h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor { background: no-repeat 10px center; text-decoration: none; }
         h1 tt, h1 code { font-size: inherit; }
         h2 tt, h2 code { font-size: inherit; }
@@ -148,7 +155,7 @@ def convert_to_html(pre_html: str) -> str:
         h4 { font-size: 16px; }
         h5 { font-size: 14px; }
         h6 { color: #777777; font-size: 14px; }
-        p, blockquote, ul, ol, dl, li, table, pre { margin: 15px 0; }
+        p, blockquote, ul, ol, dl, li, table, pre { margin: 10px 0; }
         hr { background: transparent repeat-x 0 0; border: 0 none; color: #cccccc; height: 4px; padding: 0; }
         body > h2:first-child { margin-top: 0; padding-top: 0; }
         body > h1:first-child { margin-top: 0; padding-top: 0; }
@@ -242,7 +249,7 @@ def convert_to_html(pre_html: str) -> str:
     body = mistune.markdown(pre_html)
     body = body.replace('class="lang-python"', 'class="prettyprint lang-python"')
     body = body.replace(u'<'+u'p'+u'>', '')
-    body = body.replace(u'<'+u'/p'+u'>', u'<'+u'br'+u'>')
+    body = body.replace(u'<'+u'/p'+u'>', u'<'+u'br'+u'/>')
     start_string = u'<'+u'br'+u'>'
     end_string = u'<'+u'pre'+u'>'
     body = re.sub(start_string+r'[\w\W]'+end_string+r'*', end_string, body)
@@ -261,6 +268,7 @@ This function will replace the TOC tag with an automatically generated table of 
 
 This function will also create links for all cross-references to a header. This is done by detecting the exact match (case-sensitive) of the header string.
 
+
 For example:
 
 > .py Code style
@@ -278,6 +286,7 @@ def create_toc(html: str) -> str:
     header_list = []
     skip_first = 1
     tag_number = 1
+    
     for header in soup.findAll(['h1', 'h2', 'h3', 'h4']):
         header['id'] = header.string.replace(' ','_').replace('.','_').lower()
         header_list.append((header.string, header['id']))
@@ -294,9 +303,11 @@ def create_toc(html: str) -> str:
         # link back to toc
         if tag_number > skip_first:
             new_tag = soup.new_tag("a")
-            new_tag.attrs['style'] = "font-size: 10px; color: #555; margin-top: 0px;"
+            new_tag.attrs['style'] = "font-size: 10px; color: #555;"
             new_tag.attrs['href'] = "#toc"
             new_tag.append("TOC")
+            br = soup.new_tag("br")
+            new_tag.insert_after(br)
             br = soup.new_tag("br")
             header.insert_after(br)
             header.insert_after(new_tag)
