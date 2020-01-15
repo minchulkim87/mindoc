@@ -44,7 +44,7 @@ You cannot use fenced triplet of double quotes as code if you want to document t
 
 ## How to use
 
-Install from github.
+### Install from github.
 
 > pip install git+https://github.com/minchulkim87/mindoc.git@master
 
@@ -57,14 +57,26 @@ For example:
 > mindoc mindoc.py
 
 
-*Without* installing mindoc,  you would need to install the required packages above.
+## Locally install
 
-I assume they can be installed with the following:
+(for those who do not have access to the luxury pip install)
 
-> pip install mistune
+1. Download this git repository as a zip file and extract.
+2. Open your terminal and navigate to the extracted directory
+3. Install using the setup.py
 
-> pip install beautifulsoup4
+> python setup.py install
 
+Then, as above you can use mindoc from terminal as follows:
+
+> mindoc [-w] [file to the .py file to convert, can use glob]
+
+
+### Without installation
+
+(for those who do not have access to the luxury of any installation)
+
+*Without* installing mindoc, you would need to already have the required packages above.
 
 1. Download the mindoc.py file to the directory you are working in.
 2. Open your terminal and navigate to the directory where the mindoc.py file is.
