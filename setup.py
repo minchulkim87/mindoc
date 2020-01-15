@@ -14,7 +14,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'mindoc = mindoc:main'
+            'mindoc = mindoc.main'
         ]
     },
     install_requires=['mistune', 'beautifulsoup4']
