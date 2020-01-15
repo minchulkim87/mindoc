@@ -44,24 +44,30 @@ You cannot use fenced triplet of double quotes as code if you want to document t
 
 ## How to use
 
+Install from github.
+
+> pip install git+https://github.com/minchulkim87/mindoc.git@master
+
+Then use the command from terminal
+
+> mindoc [-w] [file to the .py file to convert, can use glob]
+
+For example:
+
+> mindoc mindoc.py
+
+
+*Without* installing mindoc,  you would need to install the required packages above.
+
+I assume they can be installed with the following:
+
+> pip install mistune
+
+> pip install beautifulsoup4
+
+
 1. Download the mindoc.py file to the directory you are working in.
 2. Open your terminal and navigate to the directory where the mindoc.py file is.
 3. Type the following command into the terminal
 
 > python -m mindoc [-w] [file path to the .py file to convert, can use glob]
-
-For example:
-
-> python -m mindoc my_python_file.py
-
-You can convert a single .py file to a html documentation, or multiple files through the use of a glob *.
-
-For example:
-
-> python -m mindoc ./*.py
-
-If you are continuing to write the documentation and would like the changes to be continuously reflected in the generated .html file, use the watch option.
-
-For example:
-
-> python -m mindoc -w ./*.py
