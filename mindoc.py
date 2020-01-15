@@ -1,6 +1,11 @@
 """
 # mindoc.py
 
+A minimalistic python documentation module
+
+* [GitHub page](https://minchulkim87.github.io/mindoc/)
+* [Source code](https://github.com/minchulkim87/mindoc)
+
 This program converts a .py file into a .html file to minimally document python code.
 
 The purpose is to minimise documentation and to enable writing document-like .py files without a heavy imposition of the docstring burden.
