@@ -4,8 +4,8 @@
 A minimalistic python documentation module
 
 * [GitHub page](https://minchulkim87.github.io/mindoc/)
-
 * [Source code](https://github.com/minchulkim87/mindoc)
+
 
 This program converts a .py file into a .html file to minimally document python code.
 
@@ -28,7 +28,6 @@ I tried to minimise the dependencies by using standard python libraries or stand
 * **beautifulsoup4**: part of the Anaconda distribution
 
 
-
 ### .py Code style
 
 
@@ -43,6 +42,7 @@ The .py file to be converted must have been written in the following very specif
 * Place a [TOC] in the line you want the table of contents to be placed.
 * If you type in the exact (case-sensitive) string of the header anywhere within the documentation sections, it will be linked to the header automatically.
 
+
 **Warning!**
 
 You cannot use fenced triplet of double quotes as code if you want to document this way.
@@ -55,13 +55,16 @@ Install from github.
 
 > pip install git+https://github.com/minchulkim87/mindoc.git@master
 
+
 Then use the command from terminal
 
 > mindoc [-w] [file to the .py file to convert, can use glob]
 
+
 For example:
 
 > mindoc mindoc.py
+
 
 produces this documentation.
 
@@ -78,6 +81,7 @@ I assume they can be installed with the following:
 1. Download the mindoc.py file to the directory you are working in.
 2. Open your terminal and navigate to the directory where the mindoc.py file is.
 3. Type the following command into the terminal
+
 
 > python -m mindoc [-w] [file path to the .py file to convert, can use glob]
 
@@ -118,13 +122,12 @@ def convert_python_blocks(code: str) -> str:
     replace_with_post = u'```\n'+u'<'+u'/div'+u'>\n'
     
     if u'\r'+'\n' in code:
-        code = code.replace(u'\r'+'\n', '\n')
-    
+      code = code.replace(u'\r'+'\n', '\n')
     pre_html = code.replace('"""'+'\n', '', 1)
     pre_html = replace_every_nth(pre_html, '"""'+'\n', replace_with_pre, nth=2)
     pre_html = pre_html.replace('"""'+'\n', replace_with_post)
     pre_html = pre_html + replace_with_post
-    pre_html = pre_html.replace('\n\n', '\n'+u'<'+'br'+u'/>'+'\n')
+    #pre_html = pre_html.replace('\n'+'\n', '\n'+u'<'+'br'+u'/>'+'\n')
     return pre_html
 
 """
@@ -277,7 +280,6 @@ For example:
 > .py Code style
 
 will become a clickable link to the .py Code style section.
-
 """
 
 def create_toc(html: str) -> str:
@@ -317,7 +319,7 @@ def create_toc(html: str) -> str:
         
         tag_number += 1
         
-    toc_html = toc_html + u'<'+u'br'+u'/>\n'
+    toc_html = toc_html + u'<'+'br'+u'/>\n'
     
     toc_tag = '[TOC]'
     html = soup.prettify().replace(toc_tag, toc_html, 1)
