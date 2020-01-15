@@ -1,5 +1,7 @@
 # mindoc
+
 A minimalistic python documentation module
+
 This program converts a .py file into a .html file to minimally document python code.
 
 The purpose is to minimise documentation and to enable writing document-like .py files without a heavy imposition of the docstring burden.
@@ -20,6 +22,7 @@ I tried to minimise the dependencies by using standard python libraries or stand
 I assume they can be installed with the following:
 
 > pip install mistune
+
 > pip install beautifulsoup4
 
 
