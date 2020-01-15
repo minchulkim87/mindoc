@@ -117,6 +117,9 @@ def convert_python_blocks(code: str) -> str:
     replace_with_pre = u'<'+u'br'+u'/>'+u'<'+u'br'+u'/>'+u'<'+u'button type="button" class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;"'+u'>'+u'View code'+u'<'+u'/button'+u'>'+u'<'+u'div style=" margin-top:0px;" class="content"'+u'>'+u'\n```'+u'python\n'
     replace_with_post = u'```\n'+u'<'+u'/div'+u'>\n'
     
+    if u'\r'+'\n' in code:
+        code = code.replace(u'\r'+'\n', '\n')
+    
     pre_html = code.replace('"""'+'\n', '', 1)
     pre_html = replace_every_nth(pre_html, '"""'+'\n', replace_with_pre, nth=2)
     pre_html = pre_html.replace('"""'+'\n', replace_with_post)
@@ -248,9 +251,9 @@ def convert_to_html(pre_html: str) -> str:
     
     body = mistune.markdown(pre_html)
     body = body.replace('class="lang-python"', 'class="prettyprint lang-python"')
-    body = body.replace(u'<'+u'p'+u'>', '')
-    body = body.replace(u'<'+u'/p'+u'>', u'<'+u'br'+u'/>')
-    start_string = u'<'+u'br'+u'>'
+    body = body.replace(u'<'+u'p'+u'>', '\n')
+    body = body.replace(u'<'+u'/p'+u'>', '\n')
+    start_string = u'<'+u'br'+u'/>'
     end_string = u'<'+u'pre'+u'>'
     body = re.sub(start_string+r'[\w\W]'+end_string+r'*', end_string, body)
     
@@ -307,8 +310,6 @@ def create_toc(html: str) -> str:
             new_tag.attrs['href'] = "#toc"
             new_tag.append("TOC")
             br = soup.new_tag("br")
-            new_tag.insert_after(br)
-            br = soup.new_tag("br")
             header.insert_after(br)
             header.insert_after(new_tag)
         
@@ -316,7 +317,7 @@ def create_toc(html: str) -> str:
         
         tag_number += 1
         
-    toc_html = toc_html + u'<'+u'br'+u'>\n'
+    toc_html = toc_html + u'<'+u'br'+u'/>\n'
     
     toc_tag = '[TOC]'
     html = soup.prettify().replace(toc_tag, toc_html, 1)
