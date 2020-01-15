@@ -59,7 +59,7 @@ For example:
 > mindoc mindoc.py
 
 
-## Locally install
+### Locally install
 
 (for those who do not have access to the luxury pip install)
 
