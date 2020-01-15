@@ -21,16 +21,12 @@ This tool also helps automatically generate a table of contents and cross-refere
 
 ### Packages
 
-
 I tried to minimise the dependencies by using standard python libraries or standard packages within the Anaconda distribution. If you are not using the Anaconda distribution, these packages are required on top of the standard python libraries.
 
 * **mistune**: part of the Anaconda distribution
 * **beautifulsoup4**: part of the Anaconda distribution
 
-
 ### .py Code style
-
-
 
 The .py file to be converted must have been written in the following very specific way:
 
@@ -42,49 +38,53 @@ The .py file to be converted must have been written in the following very specif
 * Place a [TOC] in the line you want the table of contents to be placed.
 * If you type in the exact (case-sensitive) string of the header anywhere within the documentation sections, it will be linked to the header automatically.
 
-
 **Warning!**
 
 You cannot use fenced triplet of double quotes as code if you want to document this way.
 
-
 ## How to use
 
-
-Install from github.
+### Install from github.
 
 > pip install git+https://github.com/minchulkim87/mindoc.git@master
-
 
 Then use the command from terminal
 
 > mindoc [-w] [file to the .py file to convert, can use glob]
 
-
 For example:
 
 > mindoc mindoc.py
 
+Produces this document.
 
-produces this documentation.
+
+### Locally install
+
+(for those who do not have access to the luxury pip install)
+
+1. Download this git repository as a zip file and extract.
+2. Open your terminal and navigate to the extracted directory
+3. Install using the setup.py
+
+> python setup.py install
+
+Then, as above you can use mindoc from terminal as follows:
+
+> mindoc [-w] [file to the .py file to convert, can use glob]
 
 
-*Without* installing mindoc,  you would need to install the required packages above.
+### Without installation
 
-I assume they can be installed with the following:
+(for those who do not have access to the luxury of any installation)
 
-> pip install mistune
-
-> pip install beautifulsoup4
-
+*Without* installing mindoc, you would need to already have the required packages above.
 
 1. Download the mindoc.py file to the directory you are working in.
 2. Open your terminal and navigate to the directory where the mindoc.py file is.
 3. Type the following command into the terminal
 
-
 > python -m mindoc [-w] [file path to the .py file to convert, can use glob]
-
 
 
 # The code
