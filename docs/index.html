@@ -122,6 +122,7 @@
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 20px;"><a style="color: #333; " href="#some_handy_functions"><a style="color: #555; text-decoration: none;" href="#some_handy_functions">Some handy functions</a></a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 20px;"><a style="color: #333; " href="#the_main_functions"><a style="color: #555; text-decoration: none;" href="#the_main_functions">The main functions</a></a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#some_options"><a style="color: #555; text-decoration: none;" href="#some_options">Some options</a></a></p>
+<p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#output"><a style="color: #555; text-decoration: none;" href="#output">Output</a></a></p>
 <br>
 
   <br/>
@@ -155,14 +156,6 @@
     : part of the Anaconda distribution
    </li>
   </ul>
-  I assume they can be installed with the following:
-  <br/>
-  <blockquote>
-   pip install mistune
-   <br/>
-   pip install beautifulsoup4
-   <br/>
-  </blockquote>
   <h3 id="_py_code_style">
    <a style="color: #555; text-decoration: none;" href="#_py_code_style">.py Code style</a>
   </h3>
@@ -208,6 +201,42 @@
    TOC
   </a>
   <br/>
+  Install from github.
+  <br/>
+  <blockquote>
+   pip install git+
+   <a href="https://github.com/minchulkim87/mindoc.git@master">
+    https://github.com/minchulkim87/mindoc.git@master
+   </a>
+   <br/>
+  </blockquote>
+  Then use the command from terminal
+  <br/>
+  <blockquote>
+   mindoc [-w] [file to the .py file to convert, can use glob]
+   <br/>
+  </blockquote>
+  For example:
+  <br/>
+  <blockquote>
+   mindoc <a style="color: #555; text-decoration: none;" href="#mindoc_py">mindoc.py</a>
+   <br/>
+  </blockquote>
+  produces this documentation.
+  <br/>
+  <em>
+   Without
+  </em>
+  installing mindoc,  you would need to install the required packages above.
+  <br/>
+  I assume they can be installed with the following:
+  <br/>
+  <blockquote>
+   pip install mistune
+   <br/>
+   pip install beautifulsoup4
+   <br/>
+  </blockquote>
   <ol>
    <li>
     Download the <a style="color: #555; text-decoration: none;" href="#mindoc_py">mindoc.py</a> file to the directory you are working in.
@@ -223,14 +252,6 @@
    python -m mindoc [-w] [file path to the .py file to convert, can use glob]
    <br/>
   </blockquote>
-  For example:
-  <br/>
-  <blockquote>
-   python -m mindoc <a style="color: #555; text-decoration: none;" href="#mindoc_py">mindoc.py</a>
-   <br/>
-  </blockquote>
-  produces this documentation.
-  <br/>
   <h1 id="the_code">
    <a style="color: #555; text-decoration: none;" href="#the_code">The code</a>
   </h1>
@@ -603,7 +624,7 @@ def save_as(content, file_path):
   For example:
   <br/>
   <blockquote>
-   python -m mindoc ./*.py
+   mindoc ./*.py
    <br/>
   </blockquote>
   If you are continuing to write the documentation and would like the changes to be continuously reflected in the generated .html file, use the watch option.
@@ -611,7 +632,32 @@ def save_as(content, file_path):
   For example:
   <br/>
   <blockquote>
-   python -m mindoc -w ./*.py
+   mindoc -w ./*.py
+   <br/>
+  </blockquote>
+  <h3 id="output">
+   <a style="color: #555; text-decoration: none;" href="#output">Output</a>
+  </h3>
+  <a href="#toc" style="font-size: 10px; color: #555; margin-top: 0px;">
+   TOC
+  </a>
+  <br/>
+  <ul>
+   <li>
+    The output documentation .html file name will be the same as the .py file.
+   </li>
+   <li>
+    The documentation will be saved in the docs folder where the .py file is.
+   </li>
+  </ul>
+  <blockquote>
+   awesome.py -&gt; docs/awesome.html
+   <br/>
+  </blockquote>
+  Unless the .py file is in the src folder, then the documentation will be saved in the equivalent docs folder.
+  <br/>
+  <blockquote>
+   src/awesome.py -&gt; docs/awesome.html
    <br/>
   </blockquote>
   <br/>
@@ -635,6 +681,9 @@ def make_docs(py_files: list, print_production: bool):
 
         if dir_path == '':
             doc = './docs/'
+        elif dir_path.endswith('src'):
+            dir_path = dir_path[:-3]+'docs/'
+            doc = ''
         else:
             doc = '/docs/'
 
