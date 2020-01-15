@@ -46,8 +46,9 @@ You cannot use fenced triplet of double quotes as code if you want to document t
 
 ## How to use
 
-1. Open Terminal and navigate to the directory where the mindoc.py file is (or copy the mindoc.py file to the directory you are working in).
-2. Type the following command into the terminal
+1. Download the mindoc.py file to the directory you are working in.
+2. Open your terminal and navigate to the directory where the mindoc.py file is.
+3. Type the following command into the terminal
 
 > python -m mindoc [-w] [file path to the .py file to convert, can use glob]
 
@@ -56,12 +57,6 @@ For example:
 > python -m mindoc mindoc.py
 
 produces this documentation.
-
-
-## Author
-
-min.kim@ipaustralia.gov.au
-
 
 # The code
 ### Imports
