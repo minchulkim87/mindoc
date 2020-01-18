@@ -4,7 +4,7 @@
 A minimalistic python documentation tool.
 
 * [GitHub page](https://minchulkim87.github.io/mindoc/)
-* [Source code](https://github.com/minchulkim87/mindoc)
+* [Source code on GitHub](https://github.com/minchulkim87/mindoc)
 
 
 This program converts a .py file into a .html file to minimally document python code.
