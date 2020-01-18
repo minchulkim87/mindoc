@@ -1,6 +1,6 @@
 # mindoc
 
-A minimalistic python documentation module
+A minimalistic python documentation tool.
 
 https://minchulkim87.github.io/mindoc/
 
@@ -8,7 +8,7 @@ This program converts a .py file into a .html file to minimally document python 
 
 The purpose is to minimise documentation and to enable writing document-like .py files without a heavy imposition of the docstring burden.
 
-Simply write the .py file as if you would a markdown file, but instead of writing the code blocks between text, write the text between codes.
+Simply write the .py file as if you would a markdown file, but instead of writing the code blocks between text, write the text blocks between codes.
 
 This tool also helps automatically generate a table of contents and cross-referencing.
 
@@ -18,30 +18,22 @@ This tool also helps automatically generate a table of contents and cross-refere
 
 I tried to minimise the dependencies by using standard python libraries or standard packages within the Anaconda distribution. If you are not using the Anaconda distribution, these packages are required on top of the standard python libraries.
 
-* **mistune**: part of the Anaconda distribution
-* **beautifulsoup4**: part of the Anaconda distribution
-
-I assume they can be installed with the following:
-
-> pip install mistune
-
-> pip install beautifulsoup4
-
+* **mistune**: part of the standard Anaconda distribution
+* **beautifulsoup4**: part of the standard Anaconda distribution
 
 ### .py Code style
 
 The .py file to be converted must have been written in the following very specific way:
 
 * All .py must must begin with a fenced triplet of double quotes (&quot;&quot;&quot;).
-* All comment blocks, i.e. the documentation sections, must also use fenced triplet of double quotes.
+* All comment blocks, i.e. the documentation sections, must also use fenced triplet of double quotes that begin and end in new line.
 * You may use markdown syntax within the documentation sections.
 * All other comment strings will not be converted (#, ', ''', ").
 * If you want triplet quote blocks untouched, use the triplet of single quotes (''').
 * Place a [TOC] in the line you want the table of contents to be placed.
-* If you type in the exact (case-sensitive) string of the header anywhere within the documentation sections, it will be linked to the header automatically.
+* If you type in the exact (case-sensitive) string of the header, surrounded by square brackets, anywhere within the documentation sections, it will be linked to the header.
 
-**Warning!**
-You cannot use fenced triplet of double quotes as code if you want to document this way.
+By the way, you can also have code blocks within the markdown blocks, but these will not be collapsible.
 
 
 ## How to use
@@ -67,7 +59,7 @@ For example:
 2. Open your terminal and navigate to the extracted directory
 3. Install using the setup.py
 
-> python setup.py install
+> python setup.py install [--force]
 
 Then, as above you can use mindoc from terminal as follows:
 

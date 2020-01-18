@@ -1,7 +1,7 @@
 """
 # mindoc.py
 
-A minimalistic python documentation module
+A minimalistic python documentation tool.
 
 * [GitHub page](https://minchulkim87.github.io/mindoc/)
 * [Source code](https://github.com/minchulkim87/mindoc)
@@ -11,7 +11,7 @@ This program converts a .py file into a .html file to minimally document python 
 
 The purpose is to minimise documentation and to enable writing document-like .py files without a heavy imposition of the docstring burden.
 
-Simply write the .py file as if you would a markdown file, but instead of writing the code blocks between text, write the text between codes.
+Simply write the .py file as if you would a markdown file, but instead of writing the code blocks between text, write the text blocks between codes.
 
 This tool also helps automatically generate a table of contents and cross-referencing.
 
@@ -23,24 +23,27 @@ This tool also helps automatically generate a table of contents and cross-refere
 
 I tried to minimise the dependencies by using standard python libraries or standard packages within the Anaconda distribution. If you are not using the Anaconda distribution, these packages are required on top of the standard python libraries.
 
-* **mistune**: part of the Anaconda distribution
-* **beautifulsoup4**: part of the Anaconda distribution
+* **mistune**: part of the standard Anaconda distribution
+* **beautifulsoup4**: part of the standard Anaconda distribution
 
 ### .py Code style
 
 The .py file to be converted must have been written in the following very specific way:
 
 * All .py must must begin with a fenced triplet of double quotes (&quot;&quot;&quot;).
-* All comment blocks, i.e. the documentation sections, must also use fenced triplet of double quotes.
+* All comment blocks, i.e. the documentation sections, must also use fenced triplet of double quotes that begin and end in new line.
 * You may use markdown syntax within the documentation sections.
 * All other comment strings will not be converted (#, ', ''', ").
 * If you want triplet quote blocks untouched, use the triplet of single quotes (''').
 * Place a [TOC] in the line you want the table of contents to be placed.
-* If you type in the exact (case-sensitive) string of the header anywhere within the documentation sections, it will be linked to the header automatically.
+* If you type in the exact (case-sensitive) string of the header, surrounded by square brackets, anywhere within the documentation sections, it will be linked to the header.
 
-**Warning!**
+By the way, you can also have code blocks within the markdown blocks, but these will not be collapsible.
 
-You cannot use fenced triplet of double quotes as code if you want to document this way.
+```python
+def sample_function(x):
+    return x + 1
+```
 
 ## How to use
 
@@ -67,7 +70,7 @@ Produces this document.
 2. Open your terminal and navigate to the extracted directory
 3. Install using the setup.py
 
-> python setup.py install
+> python setup.py install [--force]
 
 Then, as above you can use mindoc from terminal as follows:
 
@@ -100,7 +103,7 @@ import argparse
 import subprocess
 import time
 import mistune
-
+from bs4 import BeautifulSoup
 """
 ## Conversion from py to doc
 
@@ -118,16 +121,40 @@ def get_py_code(file_path) -> str:
 This function also "separates" what is documentation from what is code.
 """
 def convert_python_blocks(code: str) -> str:
-    replace_with_pre = u'<'+u'br'+u'/>'+u'<'+u'br'+u'/>'+u'<'+u'button type="button" class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;"'+u'>'+u'View code'+u'<'+u'/button'+u'>'+u'<'+u'div style=" margin-top:0px;" class="content"'+u'>'+u'\n```'+u'python\n'
-    replace_with_post = u'```\n'+u'<'+u'/div'+u'>\n'
+    """
+    Q: What happens to fenced docstrings that are meant for functions?
+    A: They remain within the code blocks.
+    So you can continue to use docstrings to document the functions if you want to.
+    """
+
+    # Windows newline fix
+    windows_newline = u'\r'+'\n'
+    if windows_newline in code:
+        code = code.replace(windows_newline, '\n')
     
-    if u'\r'+'\n' in code:
-      code = code.replace(u'\r'+'\n', '\n')
-    pre_html = code.replace('"""'+'\n', '', 1)
-    pre_html = replace_every_nth(pre_html, '"""'+'\n', replace_with_pre, nth=2)
-    pre_html = pre_html.replace('"""'+'\n', replace_with_post)
+    # Make all code blocks (which are between markdown blocks) collapsible
+    # Remove first fenced triplet of double quotes (ftdq)
+    first_ftdq = '"""' + '\n'
+    pre_html = code.replace(first_ftdq, '', 1)
+
+    # all subsequent ftdq must begin without any indentation and must end with a new line.
+    ftdq = '\n' + '"""' + '\n'
+    br = tag('br')
+    div = tag('div')
+    ediv = endtag('div')
+    collapsible_button = tag('button type="button" class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;"')
+    ebutton = endtag('button')
+    content_div = tag('div style=" margin-top:0px;" class="content"')
+
+    md_python_start = '\n```' + 'python\n'
+    md_python_end = u'```\n'
+    replace_with_pre = '\n' + br + br + collapsible_button + 'View code' + ebutton + content_div + md_python_start
+    replace_with_post = '\n' + md_python_end + ediv + '\n'
+
+    pre_html = replace_every_nth(pre_html, ftdq, replace_with_pre, nth=2)
+    pre_html = pre_html.replace(ftdq, replace_with_post)
     pre_html = pre_html + replace_with_post
-    #pre_html = pre_html.replace('\n'+'\n', '\n'+u'<'+'br'+u'/>'+'\n')
+    
     return pre_html
 
 """
@@ -138,17 +165,28 @@ This function converts the documentation strings into html code, converting the 
 The function also styles the document.
 """
 def convert_to_html(pre_html: str) -> str:
-    meta = u'<'+u'meta name="viewport" content="width=device-width, initial-scale=1"'+u'>'
+    meta = tag('meta name="viewport" content="width=device-width, initial-scale=1"')
         
-    style = u'<'+u'style'+u'>'+u'''
-        body { width: 90%; max-width: 1200px; margin: auto; font-family: Helvetica, arial, sans-serif; font-size: 14px; line-height: 1.6; padding-top: 10px; padding-bottom: 10px; background-color: white; padding: 10px; color: #333; }
+    style = tag('style') + u'''
+        body {
+            width: 90%; max-width: 1200px; margin: auto; font-family: Helvetica, arial, sans-serif; font-size: 14px; line-height: 1.6;
+            background-color: white; padding: 10px; color: #333;
+            }
+        
+
+        /* CSS to make Markdown appear GitHub-style */
+
         body > *:first-child { margin-top: 0 !important; }
         body > *:last-child { margin-bottom: 0 !important; }
         a { color: #4183C4; margin-top: 0; margin-bottom: 0; }
         a.absent { color: #cc0000; }
         a.anchor { display: block; padding-left: 30px; margin-left: -30px; cursor: pointer; position: absolute; top: 0; left: 0; bottom: 0; }
-        h1, h2, h3, h4, h5, h6 { margin: 20px 0 5px; padding: 0; font-weight: bold; -webkit-font-smoothing: antialiased; cursor: text; position: relative; }
-        h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor { background: no-repeat 10px center; text-decoration: none; }
+        h1, h2, h3, h4, h5, h6 {
+            margin: 20px 0 5px; padding: 0; font-weight: bold; -webkit-font-smoothing: antialiased; cursor: text; position: relative;
+            }
+        h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+            background: no-repeat 10px center; text-decoration: none;
+            }
         h1 tt, h1 code { font-size: inherit; }
         h2 tt, h2 code { font-size: inherit; }
         h3 tt, h3 code { font-size: inherit; }
@@ -207,17 +245,55 @@ def convert_to_html(pre_html: str) -> str:
         span.float-left span { margin: 13px 0 0; }
         span.float-right { display: block; margin-left: 13px; overflow: hidden; float: right; }
         span.float-right > span { display: block; overflow: hidden; margin: 13px auto 0; text-align: right; }
-        code, tt { margin: 0px; padding: 0 5px; white-space: nowrap; none; }
-        pre code { margin: 0px; padding: 0; white-space: pre; border: none; background: transparent; }
-        .highlight pre { background-color: #333; border: none; font-size: 13px; line-height: 19px; overflow: auto; padding: 6px 10px; margin: 0px; }
-        pre { background-color: #333; border: none; font-size: 13px; line-height: 19px; overflow: auto; padding: 6px 10px; margin: 0px; }
-        pre code, pre tt { background-color: transparent; border: none; margin: 0px; }
-        .collapsible { background-color: #ccc; color: white; cursor: pointer; padding: 5px; width: 100%; border: none; text-align: left; outline: none; font-size: 12px; margin: 0px; }
-        .active, .collapsible:hover { background-color: #aaa; margin: 0px; }
-        .content { padding: 0px; max-height: 0; overflow: hidden; transition: max-height 0.15s ease-out;  margin: 0px; }
-        '''+u'<'+u'/style'+u'>'
+
+
+        /* CSS that allows the collapsible code blocks */
+
+        .collapsible {
+            background-color: #ccc; padding: 5px; margin: 0; border: none; outline: none;
+            text-align: left; color: white; font-size: 12px;
+            cursor: pointer; width: 100%; }
+        .active, .collapsible:hover { background-color: #aaa; margin: 0; }
+        .content { margin: 0; background-color: transparent; padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.15s ease-out; }
+
+
+        /* Code Prettify styling for the code blocks */
+
+        pre code, pre tt { border: none; margin: 0px; padding: 10px; }
+        pre .prettyprint { display: block; background-color: #333; margin: 0; }
+        pre .nocode { background-color: none; color: #000 }
+        pre .str { color: #ffa0a0 } /* string */
+        pre .kwd { color: #f0e68c; font-weight: bold } /* keyword */
+        pre .com { color: #87ceeb } /* comment */
+        pre .typ { color: #98fb98 } /* type */
+        pre .lit { color: #cd5c5c } /* literal */
+        pre .pun { color: #fff }    /* punctuation */
+        pre .pln { color: #fff }    /* plaintext */
+        pre .tag { color: #f0e68c; font-weight: bold } /* html/xml tag */
+        pre .atn { color: #bdb76b; font-weight: bold } /* attribute name */
+        pre .atv { color: #ffa0a0 } /* attribute value */
+        pre .dec { color: #98fb98 } /* decimal */
+
+        /* convert to light theme for printing */
+
+        @media print {
+        pre code, pre tt { background-color: none }
+        pre.prettyprint { background-color: none }
+        pre .str, code .str { color: #060 }
+        pre .kwd, code .kwd { color: #006; font-weight: bold }
+        pre .com, code .com { color: #600; font-style: italic }
+        pre .typ, code .typ { color: #404; font-weight: bold }
+        pre .lit, code .lit { color: #044 }
+        pre .pun, code .pun { color: #440 }
+        pre .pln, code .pln { color: #000 }
+        pre .tag, code .tag { color: #006; font-weight: bold }
+        pre .atn, code .atn { color: #404 }
+        pre .atv, code .atv { color: #060 }
+        }
+        ''' + endtag('style')
     
-    script = u'<'+u'script'+u'>'+u'''
+    # Make code collapsible
+    script = tag('script') + u'''
         var coll = document.getElementsByClassName("collapsible");
         var i;
         for (i = 0; i < coll.length; i++) {
@@ -231,10 +307,14 @@ def convert_to_html(pre_html: str) -> str:
             } 
           });
         }
-        '''+u'<'+u'/script'+u'>'+u'''
-        '''+u'<'+u'script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?skin=desert"'+u'>'+u'<'+u'/script'+u'>'+u'''
-        '''+u'<'+u'script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"'+u'>'+u'<'+u'/script'+u'>'+u'''
-        '''+u'<'+u'script type="text/x-mathjax-config"'+u'>'+u'''
+        ''' + endtag('script')
+    
+    # JavaScript styling of the code blocks
+    script += tag('script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"') + endtag('script')
+
+    # JavaScript to allow MathJax
+    script += tag('script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"') + endtag('script')
+    script += tag('script type="text/x-mathjax-config"') + u'''
         MathJax.Hub.Config({
             tex2jax: {
                 inlineMath: [ ["$","$"], ["\\\\(","\\\\)"] ],
@@ -250,21 +330,34 @@ def convert_to_html(pre_html: str) -> str:
                 linebreaks: { automatic: true }
             }
         });
-        '''+u'<'+u'/script'+u'>'
+        ''' + endtag('script')
     
-    body = mistune.markdown(pre_html)
-    body = body.replace('class="lang-python"', 'class="prettyprint lang-python"')
-    body = body.replace(u'<'+u'p'+u'>', '\n')
-    body = body.replace(u'<'+u'/p'+u'>', '\n')
-    start_string = u'<'+u'br'+u'/>'
-    end_string = u'<'+u'pre'+u'>'
-    body = re.sub(start_string+r'[\w\W]'+end_string+r'*', end_string, body)
+    # Convert the body markdown to html
+    renderer = mistune.Renderer(escape=True, hard_wrap=True, use_xhtml=False)
+    markdown = mistune.Markdown(renderer=renderer)
+    body = markdown(pre_html)
+
+    # Clean up some weird stuff that the markdown to html conversion introduced
+    br = tag('br')
+    body = body.replace(tag('p'), '\n')
+    body = body.replace(endtag('p'), br + '\n')
     
-    html = u'<'+u'!DOCTYPE html'+u'>'+u'<'+u'html'+u'>'+u'<'+u'head'+u'>'+meta+style+u'<'+u'/head'+u'>'+u'<'+u'body'+u'>'+body+script+u'<'+u'/body'+u'>'+u'<'+u'/html'+u'>'
+    # Put the html together
+    html = tag('!DOCTYPE html') + tag('html') + tag('head') + meta + style + endtag('head') + tag('body') + body + script + endtag('/body') + endtag('html')
     html = unescape(html)
     
-    return html
+    # Make prettier with the Javascript styling.
+    soup = BeautifulSoup(html, 'html.parser')
+    for code in soup.find_all('code'):
+        code['class'] = ['prettyprint'] + code['class']
+    
+    # Clean up some more weird stuff that the markdown to html conversion introduced
+    for div_content in soup.find_all('div', class_='content'):
+        div_content.br.extract()
 
+    html = soup.prettify(formatter="html5")
+
+    return html
 """
 ### 4 Create Table of Contents
 
@@ -272,28 +365,31 @@ The user can place a single line of [TOC] within the first block of docstrings.
 
 This function will replace the TOC tag with an automatically generated table of contents down to heading level 4.
 
-This function will also create links for all cross-references to a header. This is done by detecting the exact match (case-sensitive) of the header string.
+This function will also create links for all cross-references to a header. This is done by detecting the exact match (case-sensitive) of the header string surrounded by square brackets.
 
 
 For example:
 
-> .py Code style
+> [ .py Code style ] (without the extra padding I placed)
 
-will become a clickable link to the .py Code style section.
+will become [.py Code style].
+
+**Warning**: Don't use markdown or html *within* the header markdowns as this will cause errors.
+
 """
-
 def create_toc(html: str) -> str:
-    from bs4 import BeautifulSoup
+    
     soup = BeautifulSoup(html, "html.parser")
     
-    toc_html = u'\n<'+u'h3 style="color: #555" id="toc"'+u'>'+u'Table of Contents'+u'<'+u'/h3'+u'>\n'
+    toc_html = tag('h3 style="color: #555" id="toc"')+'Table of Contents'+endtag('h3')
     
     header_list = []
     skip_first = 1
     tag_number = 1
     
     for header in soup.findAll(['h1', 'h2', 'h3', 'h4']):
-        header['id'] = header.string.replace(' ','_').replace('.','_').lower()
+        header_string = header.string.replace('\n','').replace('\t','').strip().replace(' ','_').replace('.','_').lower()
+        header['id'] = header_string
         header_list.append((header.string, header['id']))
         
         if header.name=='h1':
@@ -311,31 +407,38 @@ def create_toc(html: str) -> str:
             new_tag.attrs['style'] = "font-size: 10px; color: #555;"
             new_tag.attrs['href'] = "#toc"
             new_tag.append("TOC")
-            br = soup.new_tag("br")
-            header.insert_after(br)
+            br_tag = soup.new_tag("br")
+            header.insert_after(br_tag)
             header.insert_after(new_tag)
         
-        toc_html = toc_html + u'<'+ 'p style="margin-top:0px; margin-bottom: 0px; ' + indent + '"'+ u'>' + u'<'+ 'a style="color: #333; " ' + f'''href="#{header['id']}"''' + u'>' + header.string + u'<' + u'/a'+ u'>' + u'<'+ u'/p' + u'>\n'
+        toc_html = toc_html + tag('p style="margin-top:0px; margin-bottom: 0px; '+indent+'"') + tag('a style="color: #333; " '+f'''href="#{header['id']}"''') + header.string + endtag('a') + endtag('p') +'\n'
         
         tag_number += 1
-        
-    toc_html = toc_html + u'<'+'br'+u'/>\n'
+    
+    toc_html = toc_html + tag('br') + '\n'
     
     toc_tag = '[TOC]'
-    html = soup.prettify().replace(toc_tag, toc_html, 1)
+    html = soup.prettify(formatter="html5").replace(toc_tag, toc_html, 1)
     
-    # cross-reference entire text
+    # generate cross-reference links to headers
     for header in header_list:
-        cross_ref_html = u'<'+ 'a style="color: #555; text-decoration: none;" ' + f'''href="#{header[1]}"''' + u'>' + header[0] + u'<' + u'/a'+ u'>'
-        html = html.replace(header[0], cross_ref_html)
+        cross_ref_tag = '['+header[0].replace('\n','').replace('\t','').strip()+']'
+        cross_ref_html = tag('a style="color: #555; text-decoration: none;" '+f'''href="#{header[1]}"''') + header[0] + endtag('a')
+        html = html.replace(cross_ref_tag, cross_ref_html)
         
     return html
-
 """
 ## Some handy functions
 
 Some common functions that is required for handling various tasks.
 """
+def tag(element_name: str) -> str:
+    return u'<'+element_name + u'>'
+
+
+def endtag(element_name: str) -> str:
+    return u'<' + '/' + element_name + u'>'
+
 
 def replace_every_nth(original_string: str, substring_to_replace: str, replace_with: str, nth: int) -> str:
     new_string = re.sub(f'({substring_to_replace})',
@@ -358,7 +461,6 @@ def save_as(content, file_path):
     file = open(file_path, 'w+', encoding='utf-8')
     file.write(content)
     file.close() 
-
 """
 ## The main functions
 
@@ -392,7 +494,6 @@ Unless the .py file is in the src folder, then the documentation will be saved i
 > src/awesome.py -> docs/awesome.html
 
 """
-
 def make_docs(py_files: list, print_production: bool):
     for py_file_path in py_files:
         py = get_py_code(py_file_path)
@@ -439,7 +540,7 @@ def main():
         print('Ctrl+c to exit')
         while True:
             make_docs(py_files, print_production=False)
-            time.sleep(1)
+            time.sleep(3)
     
     print('')
     
