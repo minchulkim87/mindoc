@@ -64,7 +64,7 @@ Produces this document.
 
 ### Locally install
 
-(for those who do not have access to the luxury pip install)
+(for those who do not have access to the luxury of pip install)
 
 1. Download this git repository as a zip file and extract.
 2. Open your terminal and navigate to the extracted directory
