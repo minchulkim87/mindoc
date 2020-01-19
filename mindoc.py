@@ -118,7 +118,7 @@ def get_py_code(file_path) -> str:
 """
 ### 2 Convert the python blocks into collapsibles
 
-This function also "separates" what is documentation from what is code.
+This function is how mindoc "separates" what is documentation from what is code.
 """
 def convert_python_blocks(code: str) -> str:
     """
@@ -463,10 +463,6 @@ def save_as(content, file_path):
     file.close() 
 """
 ## The main functions
-
-Unfortunately, for now you need to copy this mindoc.py file into a folder that you are working in to use it.
-
-Using the terminal, you would also need to navigate to the folder where the mindoc.py file is.
 
 ### Some options
 
