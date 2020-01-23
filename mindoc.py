@@ -144,7 +144,7 @@ def convert_python_blocks(code: str) -> str:
     ediv = endtag('div')
     collapsible_button = tag('button type="button" class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;"')
     ebutton = endtag('button')
-    content_div = tag('div style=" margin-top:0px;" class="content"')
+    content_div = tag('div style=" margin: 0;" class="content"')
 
     md_python_start = '\n```' + 'python\n\n'
     md_python_end = u'```\n\n'
@@ -258,8 +258,8 @@ def convert_to_html(pre_html: str) -> str:
 
 
         /* Code Prettify styling for the code blocks */
-
-        pre code, pre tt { border: none; margin: 0px; padding: 10px; }
+        pre, code { margin: 0; padding: 0; }
+        pre code, pre tt { border: none; margin: 0; padding: 10px; }
         pre .prettyprint { display: block; background-color: #333; margin: 0; }
         pre .nocode { background-color: none; color: #000 }
         pre .str { color: #ffa0a0 } /* string */
@@ -339,9 +339,11 @@ def convert_to_html(pre_html: str) -> str:
 
     # Clean up some weird stuff that the markdown to html conversion introduced
     br = tag('br')
-    body = body.replace(tag('p'), '\n')
-    body = body.replace(endtag('p'), br + '\n')
+    body = body.replace(tag('p'), '')
+    body = body.replace(endtag('p'), br)
     body = body.replace('code class="', 'code class="prettyprint ')
+    pre = tag('pre')
+    body = re.sub(br+r'[\w\W+]'+pre, pre, body)
     
     # Put the html together
     html = tag('!DOCTYPE html') + tag('html') + tag('head') + meta + style + endtag('head') + tag('body') + body + script + endtag('/body') + endtag('html')
