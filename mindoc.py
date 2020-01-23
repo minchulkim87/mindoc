@@ -146,8 +146,8 @@ def convert_python_blocks(code: str) -> str:
     ebutton = endtag('button')
     content_div = tag('div style=" margin-top:0px;" class="content"')
 
-    md_python_start = '\n```' + 'python\n'
-    md_python_end = u'```\n'
+    md_python_start = '\n```' + 'python\n\n'
+    md_python_end = u'```\n\n'
     replace_with_pre = '\n' + br + br + collapsible_button + 'View code' + ebutton + content_div + md_python_start
     replace_with_post = '\n' + md_python_end + ediv + '\n'
 
@@ -341,22 +341,12 @@ def convert_to_html(pre_html: str) -> str:
     br = tag('br')
     body = body.replace(tag('p'), '\n')
     body = body.replace(endtag('p'), br + '\n')
+    body = body.replace('code class="', 'code class="prettyprint ')
     
     # Put the html together
     html = tag('!DOCTYPE html') + tag('html') + tag('head') + meta + style + endtag('head') + tag('body') + body + script + endtag('/body') + endtag('html')
     html = unescape(html)
     
-    # Make prettier with the Javascript styling.
-    soup = BeautifulSoup(html, 'html.parser')
-    for code in soup.find_all('code'):
-        code['class'] = ['prettyprint'] + code['class']
-    
-    # Clean up some more weird stuff that the markdown to html conversion introduced
-    for div_content in soup.find_all('div', class_='content'):
-        div_content.br.extract()
-
-    html = soup.prettify(formatter="html5")
-
     return html
 """
 ### 4 Create Table of Contents
