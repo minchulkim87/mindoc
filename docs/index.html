@@ -653,7 +653,7 @@ def convert_to_html(pre_html: str) -&gt; str:
     body = re.sub(br+r'[\w\W+]'+pre, pre, body)
 
     # Put the html together
-    html = tag('!DOCTYPE html') + tag('html') + tag('head') + meta + style + endtag('head') + tag('body') + body + script + endtag('/body') + endtag('html')
+    html = tag('!DOCTYPE html') + tag('html') + tag('head') + meta + style + endtag('head') + tag('body') + body + script + endtag('body') + endtag('html')
     html = unescape(html)
 
     return html
