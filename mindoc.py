@@ -1,42 +1,52 @@
 """
 # mindoc.py
 
-A minimalistic python documentation tool.
+A minimalistic python and SQL documentation tool.
 
 * [GitHub page](https://minchulkim87.github.io/mindoc/)
 * [Source code on GitHub](https://github.com/minchulkim87/mindoc)
 
 
-This program converts a .py file into a .html file to minimally document python code.
+This program converts .py and .sql files into .html documentation files with minimal work on the developer's part.
 
-The purpose is to minimise documentation and to enable writing document-like .py files without a heavy imposition of the docstring burden.
+The purpose is to minimise the documentation burden.
 
-Simply write the .py file as if you would a markdown file, but instead of writing the code blocks between text, write the text blocks between codes.
+Simply write the code as if you would a markdown file with the documentation parts as comment blocks.
 
 This tool also helps automatically generate a table of contents and cross-referencing.
 
+mindoc also supports basic diagramming with markdown-like syntax.
+
 [TOC]
+
 
 ## Requirements
 
 ### Packages
 
-I tried to minimise the dependencies by using standard python libraries or standard packages within the Anaconda distribution. If you are not using the Anaconda distribution, these packages are required on top of the standard python libraries.
+I tried to minimise the package dependencies by using standard python libraries or included packages within the typical Anaconda distribution.
 
 * **mistune**: part of the standard Anaconda distribution
 * **beautifulsoup4**: part of the standard Anaconda distribution
 
 ### .py Code style
 
-The .py file to be converted must have been written in the following very specific way:
+The .py file to be converted must have been written in the following way:
 
 * All .py must must begin with a fenced triplet of double quotes (&quot;&quot;&quot;).
 * All comment blocks, i.e. the documentation sections, must also use fenced triplet of double quotes that begin and end in new line.
 * You may use markdown syntax within the documentation sections.
 * All other comment strings will not be converted (#, ', ''', ").
 * If you want triplet quote blocks untouched, use the triplet of single quotes (''').
-* Place a [TOC] in the line you want the table of contents to be placed.
-* If you type in the exact (case-sensitive) string of the header, surrounded by square brackets, anywhere within the documentation sections, it will be linked to the header.
+
+### .sql Code style
+
+The .sql file to be converted must have been written in the following way:
+
+* The file must begin with a comment block that uses the /* comment block */ syntax.
+* Only the first occurance of such comment block will be treated as the documentation block.
+* You may use markdown syntax within the documentation section.
+
 
 ## Installation
 
@@ -46,7 +56,7 @@ The .py file to be converted must have been written in the following very specif
 
 Then use the command from terminal
 
-> mindoc [-w] [file to the .py file to convert, can use glob]
+> mindoc [-w] [file to the code file to convert, can use glob]
 
 For example:
 
@@ -67,7 +77,7 @@ Produces this document.
 
 Then, as above you can use mindoc from terminal as follows:
 
-> mindoc [-w] [file to the .py file to convert, can use glob]
+> mindoc [-w] [file to the code file to convert, can use glob]
 
 
 ### Without installation
@@ -80,7 +90,7 @@ Then, as above you can use mindoc from terminal as follows:
 2. Open your terminal and navigate to the directory where the mindoc.py file is.
 3. Type the following command into the terminal
 
-> python -m mindoc [-w] [file path to the .py file to convert, can use glob]
+> python -m mindoc [-w] [file path to the code file to convert, can use glob]
 
 ## How to use
 
@@ -112,14 +122,60 @@ print("Hello world")
     </div>
 </div>
 
-### MermaidJS is enabled
 
-See [mermaid](https://mermaid-js.github.io/mermaid/) on the mermaid diagram syntax.
+### Basic .sql Example
 
-For example
+<br>Calling the following command in the terminal
+
+> mindoc example.sql
+
+<br>would turn the following **example.sql** file:<br><br>
+
+```sql
+/*
+##### This is a heading
+
+This is some text
+*/
+SELECT *
+FROM some_table
+WHERE this_thing = that_thing
 
 ```
 
+<br>into the following **docs/example.html** file:<br>
+
+<div style="border: solid 1px; padding: 20px">
+    <h5>This is a heading</h5>
+    <p>This is some text</p>
+    <button type="button" class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;">View code</button>
+    <div style=" margin: 0;" class="content">
+    <pre><code class="prettyyprint lang-sql">
+SELECT *
+FROM some_table
+WHERE this_thing = that_thing
+</code></pre>
+    </div>
+</div>
+
+
+### Table of Contents and Cross-Referencing
+
+You will see in this documentation that there is a table of contents. mindoc generates that automatically for you.
+
+* Place a [TOC] in its own line you want the table of contents to be placed in.
+* If you type in the exact (case-sensitive) string of the header, surrounded by square brackets ([string of the header]), it will be linked to that header.
+
+mindoc will only use headings down to level 4 (####).
+
+
+### Diagrams
+
+<br>See [the GitHub for mermaid](https://mermaid-js.github.io/mermaid/) to learn more about mermaid.<br>
+
+For example, this markdown like snippet:<br><br>
+
+```html
 &#96;&#96;&#96;mermaid
 graph LR
     A-->B
@@ -130,7 +186,7 @@ graph LR
 
 ```
 
-produces
+<br>produces<br><br>
 
 ```mermaid
 graph LR
@@ -156,20 +212,26 @@ import time
 import mistune
 from bs4 import BeautifulSoup
 """
-## Conversion from py to doc
+## Conversion from code to documentation
 
-### 1 Read the .py file
+### 1 Read the code file
+
+Only supports .py and .sql files.
 """
-def get_py_code(file_path) -> str:
-    py_file = open(file_path, 'r')
-    py = py_file.read()
-    py_file.close()
-    return py
+def get_code(code_file_path) -> str:
+    code_file = open(code_file_path, 'r')
+    code = code_file.read()
+    code_file.close()
+    return code
 
 """
-### 2 Convert the python blocks into collapsibles
+### 2 Convert the code blocks into collapsibles
 
 This function is how mindoc "separates" what is documentation from what is code.
+
+#### 2.1 Python
+
+mindoc converts .py files into .html documentation files.
 """
 def convert_python_blocks(code: str) -> str:
     """
@@ -209,9 +271,49 @@ def convert_python_blocks(code: str) -> str:
     return pre_html
 
 """
+#### 2.2 SQL
+
+mindoc converts .sql files into .html documentation files.
+
+Unlike python, I don't anticipate SQL would funnction better with multiple markdown blocks inter-dispersed with code blocks. Therefore, only the first comment block is considered documentation using markdown.
+"""
+def convert_sql_blocks(code: str) -> str:
+    
+    # Windows newline fix
+    windows_newline = u'\r'+'\n'
+    if windows_newline in code:
+        code = code.replace(windows_newline, '\n')
+    
+    comment_start = '/' + '*'
+    comment_end = '*' + '/'
+    
+    # Remove first comment block starter
+    pre_html = code.replace(comment_start, '', 1)
+
+    # Replace first comment block ender with a code block starter
+    br = tag('br')
+    div = tag('div')
+    ediv = endtag('div')
+    collapsible_button = tag('button type="button" class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;"')
+    ebutton = endtag('button')
+    content_div = tag('div style=" margin: 0;" class="content"')
+
+    md_sql_start = '\n```' + 'sql'
+    md_sql_end = u'```\n'
+    replace_with_pre = br + collapsible_button + 'View code' + ebutton + content_div + md_sql_start
+    replace_with_post = md_sql_end + ediv + '\n'
+
+    pre_html = pre_html.replace(comment_end, replace_with_pre, 1)
+    pre_html = pre_html + replace_with_post
+
+    return pre_html
+
+"""
+
+
 ### 3 Convert the code to a html doc
 
-This function converts the documentation strings into html code, converting the markdown syntax into html.
+This function converts the documentation blocks into html code, converting the markdown syntax into html.
 
 The function also styles the document.
 """
@@ -362,6 +464,7 @@ def convert_to_html(pre_html: str) -> str:
     
     # JavaScript styling of the code blocks
     script += tag('script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"') + endtag('script')
+    script += tag('script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/lang-sql.min.js"') + endtag('script')
 
     # JavaScript to allow MathJax
     script += tag('script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"') + endtag('script')
@@ -396,10 +499,14 @@ def convert_to_html(pre_html: str) -> str:
     br = tag('br')
     body = body.replace(tag('p'), '')
     body = body.replace(endtag('p'), br)
-    body = body.replace('code class="', 'code class="prettyprint ')
-    body = body.replace('prettyprint lang-mermaid', 'mermaid')
     pre = tag('pre')
     body = re.sub(br+r'[\w\W+]'+pre, pre, body)
+
+    # This bit allows the Google Code Prettify to work
+    body = body.replace('code class="', 'code class="prettyprint ')
+
+    # This bit allows the MermaidJS to work
+    body = body.replace('prettyprint lang-mermaid', 'mermaid')
     
     # Put the html together
     html = tag('!DOCTYPE html') + tag('html') + tag('head') + meta + style + endtag('head') + tag('body') + body + script + endtag('body') + endtag('html')
@@ -413,16 +520,19 @@ The user can place a single line of [TOC] within the first block of docstrings.
 
 This function will replace the TOC tag with an automatically generated table of contents down to heading level 4.
 
-This function will also create links for all cross-references to a header. This is done by detecting the exact match (case-sensitive) of the header string surrounded by square brackets.
+This function will also create links for all cross-references to a header.
 
+Cross-referencing is done by detecting the exact match (case-sensitive) of the header string surrounded by square brackets.<br>
 
 For example:
 
-> [ .py Code style ] (without the extra padding I placed)
+> [ .py Code style ] (without the extra spaces)
 
-will become [.py Code style].
+will become this --> [.py Code style] (yes, this is a link).<br>
 
 **Warning**: Don't use markdown or html *within* the header markdowns as this will cause errors.
+
+**Warning**: Using some non-alphanumeric characters *within* the header markdown will cause errors.
 
 """
 def create_toc(html: str) -> str:
@@ -514,41 +624,47 @@ def save_as(content, file_path):
 
 ### Some options
 
-You can convert a single .py file to a html documentation, or multiple files through the use of a glob *.
+If you want to convert multiple files in a folder, use the glob (*).
 
 For example:
 
-> mindoc ./*.py
+> mindoc ./src/*.py
 
-If you are continuing to write the documentation and would like the changes to be continuously reflected in the generated .html file, use the watch option.
+If you are continuing to write the documentation and would like the changes to be continuously reflected in the .html file, use the watch flag (-w).
 
 For example:
 
-> mindoc -w ./*.py
+> mindoc -w example.py
 
 ### Output
 
-* The output documentation .html file name will be the same as the .py file.
-* The documentation will be saved in the docs folder where the .py file is.
+* The output documentation .html file name will be the same as the code file.
+* The documentation will be saved in the docs folder where the code file is.
 
-> awesome.py -> docs/awesome.html
+> ./awesome.py -> ./docs/awesome.html
 
-Unless the .py file is in the src folder, then the documentation will be saved in the equivalent docs folder.
+Unless the code file is in the src folder, then the documentation will be saved in the equivalent docs folder.
 
-> src/awesome.py -> docs/awesome.html
+> ./src/awesome.py -> ./docs/awesome.html
 
 """
-def make_docs(py_files: list, print_production: bool):
-    for py_file_path in py_files:
-        py = get_py_code(py_file_path)
-        pre_html = convert_python_blocks(py)
+def make_docs(code_files: list, print_production: bool):
+    for code_file_path in code_files:
+        code = get_code(code_file_path)
+        if code_file_path.endswith('.py'):
+            pre_html = convert_python_blocks(code)
+        elif code_file_path.endswith('.sql'):
+            pre_html = convert_sql_blocks(code)
+        else:
+            print('File type not supported')
+            pre_html = ''
         html = convert_to_html(pre_html)
 
         toc_tag = '[TOC]'
         if toc_tag in html:
             html = create_toc(html)
         
-        (dir_path, file_name) = os.path.split(py_file_path)
+        (dir_path, file_name) = os.path.split(code_file_path)
         
         if dir_path == '':
             doc = './docs/'
@@ -558,32 +674,32 @@ def make_docs(py_files: list, print_production: bool):
         else:
             doc = '/docs/'
         
-        html_file_path = dir_path + doc + file_name.replace('.py', '.html')
+        html_file_path = dir_path + doc + file_name.replace('.py', '.html').replace('.sql', '.html')
         
         save_as(html, html_file_path)
         
         if print_production:
-            print(f'Doc for {py_file_path} saved as {html_file_path}.')
+            print(f'Doc for {code_file_path} saved as {html_file_path}.')
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-w', '--watch', action='store_true', help='Watch original files and re-generate documentation on changes')
-    parser.add_argument("src_path", metavar="path", type=str, help="Path to .py files to be converted to .html doc; accepts * as wildcard")
+    parser.add_argument("src_path", metavar="path", type=str, help="Path to code files to be converted to .html doc; accepts * as wildcard")
 
     args = parser.parse_args()
     
     print('')
     files = glob.glob(args.src_path)
-    py_files = [x for x in files if x.endswith('.py')]
+    code_files = [x for x in files if x.endswith('.py')] + [x for x in files if x.endswith('.sql')]
     
-    make_docs(py_files, print_production=True)
+    make_docs(code_files, print_production=True)
     
     if args.watch:
         print('Watching...')
         print('Ctrl+c to exit')
         while True:
-            make_docs(py_files, print_production=False)
+            make_docs(code_files, print_production=False)
             time.sleep(3)
     
     print('')

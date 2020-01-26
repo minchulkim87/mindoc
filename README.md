@@ -1,14 +1,17 @@
-# mindoc
+# mindoc.py
 
-A minimalistic python documentation tool.
+A minimalistic python and SQL documentation tool.
 
-This program converts a .py file into a .html file to minimally document python code.
+This program converts .py and .sql files into .html documentation files with minimal work on the developer's part.
 
-The purpose is to minimise documentation and to enable writing document-like .py files without a heavy imposition of the docstring burden.
+The purpose is to minimise the documentation burden.
 
-Simply write the .py file as if you would a markdown file, but instead of writing the code blocks between text, write the text blocks between codes.
+Simply write the code as if you would a markdown file with the documentation parts as comment blocks.
 
 This tool also helps automatically generate a table of contents and cross-referencing.
 
+mindoc also supports basic diagramming with markdown-like syntax.
+
 Please see the documentation on GitHub to see how to install and use mindoc.
+
 https://minchulkim87.github.io/mindoc/
