@@ -7,7 +7,7 @@ A minimalistic python and SQL documentation tool.
 * [Source code on GitHub](https://github.com/minchulkim87/mindoc)
 
 
-This program converts .py and .sql files into .html documentation files with minimal work on the developer's part.
+This program converts .py and .sql (and .md) files into .html documentation files with minimal work on the developer's part.
 
 The purpose is to minimise the documentation burden.
 
@@ -277,7 +277,7 @@ def convert_python_blocks(code: str) -> str:
 
 mindoc converts .sql files into .html documentation files.
 
-Unlike python, I don't anticipate SQL would funnction better with multiple markdown blocks inter-dispersed with code blocks. Therefore, only the first comment block is considered documentation using markdown.
+Unlike python, I don't anticipate SQL would benefit much with multiple markdown blocks. Therefore, only the first comment block is considered documentation using markdown.
 """
 def convert_sql_blocks(code: str) -> str:
     
