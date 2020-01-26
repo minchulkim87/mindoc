@@ -38,14 +38,7 @@ The .py file to be converted must have been written in the following very specif
 * Place a [TOC] in the line you want the table of contents to be placed.
 * If you type in the exact (case-sensitive) string of the header, surrounded by square brackets, anywhere within the documentation sections, it will be linked to the header.
 
-By the way, you can also have code blocks within the markdown blocks, but these will not be collapsible.
-
-```python
-def sample_function(x):
-    return x + 1
-```
-
-## How to use
+## Installation
 
 ### Install from github.
 
@@ -88,6 +81,64 @@ Then, as above you can use mindoc from terminal as follows:
 3. Type the following command into the terminal
 
 > python -m mindoc [-w] [file path to the .py file to convert, can use glob]
+
+## How to use
+
+### Basic .py Example
+
+<br>Calling the following command in the terminal
+
+> mindoc example.py
+
+<br>would turn the following **example.py** file:<br><br>
+
+```python
+&quot;&quot;&quot; 
+##### This is a heading
+
+This is some text
+&quot;&quot;&quot; 
+print("Hello world")
+```
+
+<br>into the following **docs/example.html** file:<br>
+
+<div style="border: solid 1px; padding: 20px">
+    <h5>This is a heading</h5>
+    <p>This is some text</p>
+    <button type="button" class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;">View code</button>
+    <div style=" margin: 0;" class="content">
+    <pre><code class="prettyyprint lang-python">print("Hello world")</code></pre>
+    </div>
+</div>
+
+### MermaidJS is enabled
+
+See [mermaid](https://mermaid-js.github.io/mermaid/) on the mermaid diagram syntax.
+
+For example
+
+```
+
+&#96;&#96;&#96;mermaid
+graph LR
+    A-->B
+    A-->C
+    B-->D
+    C-->D
+&#96;&#96;&#96;
+
+```
+
+produces
+
+```mermaid
+graph LR
+    A-->B
+    A-->C
+    B-->D
+    C-->D
+```
 
 
 # The code
@@ -332,6 +383,10 @@ def convert_to_html(pre_html: str) -> str:
         });
         ''' + endtag('script')
     
+    # JavaScript to allow MermaidJS (8.4.5 modified to neutral theme) for diagrams
+    script += tag('script src="https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js"') + endtag('script')
+    script += tag('script') + "var config = { startOnLoad:true }; mermaid.initialize(config);" + endtag('script')
+
     # Convert the body markdown to html
     renderer = mistune.Renderer(escape=True, hard_wrap=True, use_xhtml=False)
     markdown = mistune.Markdown(renderer=renderer)
@@ -342,6 +397,7 @@ def convert_to_html(pre_html: str) -> str:
     body = body.replace(tag('p'), '')
     body = body.replace(endtag('p'), br)
     body = body.replace('code class="', 'code class="prettyprint ')
+    body = body.replace('prettyprint lang-mermaid', 'mermaid')
     pre = tag('pre')
     body = re.sub(br+r'[\w\W+]'+pre, pre, body)
     

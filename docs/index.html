@@ -157,10 +157,13 @@
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 20px;"><a style="color: #333; " href="#requirements">Requirements</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#packages">Packages</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#_py_code_style">.py Code style</a></p>
-<p style="margin-top:0px; margin-bottom: 0px; margin-left: 20px;"><a style="color: #333; " href="#how_to_use">How to use</a></p>
+<p style="margin-top:0px; margin-bottom: 0px; margin-left: 20px;"><a style="color: #333; " href="#installation">Installation</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#install_from_github_">Install from github.</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#locally_install">Locally install</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#without_installation">Without installation</a></p>
+<p style="margin-top:0px; margin-bottom: 0px; margin-left: 20px;"><a style="color: #333; " href="#how_to_use">How to use</a></p>
+<p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#basic__py_example">Basic .py Example</a></p>
+<p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#mermaidjs_is_enabled">MermaidJS is enabled</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 0px;"><a style="color: #333; " href="#the_code">The code</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#imports">Imports</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 20px;"><a style="color: #333; " href="#conversion_from_py_to_doc">Conversion from py to doc</a></p>
@@ -237,12 +240,8 @@
     If you type in the exact (case-sensitive) string of the header, surrounded by square brackets, anywhere within the documentation sections, it will be linked to the header.
    </li>
   </ul>
-  By the way, you can also have code blocks within the markdown blocks, but these will not be collapsible.
-  <pre><code class="prettyprint lang-python">def sample_function(x):
-    return x + 1
-</code></pre>
-  <h2 id="how_to_use">
-   How to use
+  <h2 id="installation">
+   Installation
   </h2>
   <a href="#toc" style="font-size: 10px; color: #555;">
    TOC
@@ -335,6 +334,94 @@
    python -m mindoc [-w] [file path to the .py file to convert, can use glob]
    <br>
   </blockquote>
+  <h2 id="how_to_use">
+   How to use
+  </h2>
+  <a href="#toc" style="font-size: 10px; color: #555;">
+   TOC
+  </a>
+  <br>
+  <h3 id="basic__py_example">
+   Basic .py Example
+  </h3>
+  <a href="#toc" style="font-size: 10px; color: #555;">
+   TOC
+  </a>
+  <br>
+  <br>
+  Calling the following command in the terminal
+  <br>
+  <blockquote>
+   mindoc example.py
+   <br>
+  </blockquote>
+  <br>
+  would turn the following
+  <strong>
+   example.py
+  </strong>
+  file:
+  <br>
+  <br>
+  <pre><code class="prettyprint lang-python">""" 
+##### This is a heading
+
+This is some text
+""" 
+print("Hello world")
+</code></pre>
+  <br>
+  into the following
+  <strong>
+   docs/example.html
+  </strong>
+  file:
+  <br>
+  <br>
+  <div style="border: solid 1px; padding: 20px">
+   <h5>
+    This is a heading
+   </h5>
+   <p>
+    This is some text
+   </p>
+   <button class="collapsible" style="width: 80px; text-align:center; margin-bottom:0px;" type="button">
+    View code
+   </button>
+   <div class="content" style=" margin: 0;">
+    <pre><code class="prettyprint prettyyprint lang-python">print("Hello world")</code></pre>
+   </div>
+  </div>
+  <h3 id="mermaidjs_is_enabled">
+   MermaidJS is enabled
+  </h3>
+  <a href="#toc" style="font-size: 10px; color: #555;">
+   TOC
+  </a>
+  <br>
+  See
+  <a href="https://mermaid-js.github.io/mermaid/">
+   mermaid
+  </a>
+  on the mermaid diagram syntax.
+  <br>
+  For example
+  <pre><code>
+```mermaid
+graph LR
+    A--&gt;B
+    A--&gt;C
+    B--&gt;D
+    C--&gt;D
+```
+</code></pre>
+  produces
+  <pre><code class="mermaid">graph LR
+    A--&gt;B
+    A--&gt;C
+    B--&gt;D
+    C--&gt;D
+</code></pre>
   <h1 id="the_code">
    The code
   </h1>
@@ -639,6 +726,10 @@ def convert_to_html(pre_html: str) -&gt; str:
         });
         ''' + endtag('script')
 
+    # JavaScript to allow MermaidJS (8.4.5 modified to neutral theme) for diagrams
+    script += tag('script src="https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js"') + endtag('script')
+    script += tag('script') + "var config = { startOnLoad:true }; mermaid.initialize(config);" + endtag('script')
+
     # Convert the body markdown to html
     renderer = mistune.Renderer(escape=True, hard_wrap=True, use_xhtml=False)
     markdown = mistune.Markdown(renderer=renderer)
@@ -649,6 +740,7 @@ def convert_to_html(pre_html: str) -&gt; str:
     body = body.replace(tag('p'), '')
     body = body.replace(endtag('p'), br)
     body = body.replace('code class="', 'code class="prettyprint ')
+    body = body.replace('mermaid', 'mermaid')
     pre = tag('pre')
     body = re.sub(br+r'[\w\W+]'+pre, pre, body)
 
@@ -952,6 +1044,10 @@ if __name__ == "__main__":
             }
         });
   </script>
-  <!--/body-->
+  <script src="https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js">
+  </script>
+  <script>
+   var config = { startOnLoad:true }; mermaid.initialize(config);
+  </script>
  </body>
 </html>
