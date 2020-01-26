@@ -17,6 +17,8 @@ This tool also helps automatically generate a table of contents and cross-refere
 
 mindoc also supports basic diagramming with markdown-like syntax.
 
+If you want to apply the same style of documentation to a plain .md file and convert it to a html file, then this tool also converts .md to .html.
+
 [TOC]
 
 
@@ -655,6 +657,8 @@ def make_docs(code_files: list, print_production: bool):
             pre_html = convert_python_blocks(code)
         elif code_file_path.endswith('.sql'):
             pre_html = convert_sql_blocks(code)
+        elif code_file_path.endswith('.md'):
+            pre_html = code
         else:
             print('File type not supported')
             pre_html = ''
@@ -674,7 +678,7 @@ def make_docs(code_files: list, print_production: bool):
         else:
             doc = '/docs/'
         
-        html_file_path = dir_path + doc + file_name.replace('.py', '.html').replace('.sql', '.html')
+        html_file_path = dir_path + doc + file_name.replace('.py', '.html').replace('.sql', '.html').replace('.md', '.html')
         
         save_as(html, html_file_path)
         
@@ -691,7 +695,9 @@ def main():
     
     print('')
     files = glob.glob(args.src_path)
-    code_files = [x for x in files if x.endswith('.py')] + [x for x in files if x.endswith('.sql')]
+    code_files = [x for x in files if x.endswith('.py')]
+    code_files += [x for x in files if x.endswith('.sql')]
+    code_files += [x for x in files if x.endswith('.md')]
     
     make_docs(code_files, print_production=True)
     

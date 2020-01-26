@@ -6,7 +6,7 @@ description = (
 
 setup(
     name="mindoc",
-    version="0.3.0",
+    version="0.4.0",
     description=description,
     author="Min Chul Kim",
     author_email="minchulkim87@gmail.com",

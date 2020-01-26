@@ -4,6 +4,8 @@ A minimalistic python and SQL documentation tool.
 
 This program converts .py and .sql files into .html documentation files with minimal work on the developer's part.
 
+(You can also use it to conver .md files to .html files in the same style if you wish)
+
 The purpose is to minimise the documentation burden.
 
 Simply write the code as if you would a markdown file with the documentation parts as comment blocks.
