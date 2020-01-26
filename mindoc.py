@@ -43,7 +43,7 @@ The .py file to be converted must have been written in the following way:
 
 The .sql file to be converted must have been written in the following way:
 
-* The file must begin with a comment block that uses the /* comment block */ syntax.
+* The file must begin with a comment block that uses the /&#42; comment block &#42;/ syntax.
 * Only the first occurance of such comment block will be treated as the documentation block.
 * You may use markdown syntax within the documentation section.
 
