@@ -642,8 +642,11 @@ For example:
 
 * The output documentation .html file name will be the same as the code file.
 * The documentation will be saved in the docs folder where the code file is.
+* Unless the original file is .md file, then the .html file will be saved in the same folder.
 
 > ./awesome.py -> ./docs/awesome.html
+
+> ./awesome.md -> ./awesome.html
 
 Unless the code file is in the src folder, then the documentation will be saved in the equivalent docs folder.
 
@@ -670,7 +673,10 @@ def make_docs(code_files: list, print_production: bool):
         
         (dir_path, file_name) = os.path.split(code_file_path)
         
-        if dir_path == '':
+        if file_name.endswith('.md'):
+            dir_path = dir_path
+            doc = ''
+        elif dir_path == '':
             doc = './docs/'
         elif dir_path.endswith('src'):
             dir_path = dir_path[:-3]+'docs/'
