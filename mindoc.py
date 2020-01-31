@@ -674,8 +674,9 @@ def make_docs(code_files: list, print_production: bool):
         (dir_path, file_name) = os.path.split(code_file_path)
         
         if file_name.endswith('.md'):
-            dir_path = dir_path
-            doc = ''
+            if dir_path == '':
+                dir_path = '.'
+            doc = '/'
         elif dir_path == '':
             doc = './docs/'
         elif dir_path.endswith('src'):
