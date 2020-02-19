@@ -7,8 +7,8 @@ A minimalistic python and SQL documentation tool.
 * [Source code on GitHub](https://github.com/minchulkim87/mindoc)
 
 
-This program converts .py and .sql (and .md) files into .html documentation files with minimal work on the developer's part.
-
+This program converts .py, .sql, and .md files into .html documentation files with minimal work on the developer's part.
+<br>
 The purpose is to minimise the documentation burden.
 
 Simply write the code as if you would a markdown file with the documentation parts as comment blocks.
@@ -75,7 +75,7 @@ Produces this document.
 2. Open your terminal and navigate to the extracted directory
 3. Install using the setup.py
 
-> python setup.py install [--force]
+> python setup.py install
 
 Then, as above you can use mindoc from terminal as follows:
 
@@ -173,7 +173,7 @@ mindoc will only use headings down to level 4 (####).
 
 ### Diagrams
 
-<br>See [the GitHub for mermaid](https://mermaid-js.github.io/mermaid/) to learn more about mermaid.<br>
+<br>See [the GitHub for mermaid](https://mermaid-js.github.io/mermaid/) to learn more about MermaidJS. Currently using mermaid version 8.4.6.<br>
 
 For example, this markdown like snippet:<br><br>
 
@@ -505,10 +505,10 @@ def convert_to_html(pre_html: str) -> str:
     body = re.sub(br+r'[\w\W+]'+pre, pre, body)
 
     # This bit allows the Google Code Prettify to work
-    body = body.replace('code class="', 'code class="prettyprint ')
+    body = body.replace('code ' + 'class="', 'code class="prettyprint ')
 
     # This bit allows the MermaidJS to work
-    body = body.replace('prettyprint lang-mermaid', 'mermaid')
+    body = body.replace('prettyprint ' + 'lang-mermaid', 'mermaid')
     
     # Put the html together
     html = tag('!DOCTYPE html') + tag('html') + tag('head') + meta + style + endtag('head') + tag('body') + body + script + endtag('body') + endtag('html')

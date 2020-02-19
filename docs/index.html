@@ -145,7 +145,9 @@
     </a>
    </li>
   </ul>
-  This program converts .py and .sql (and .md) files into .html documentation files with minimal work on the developer's part.
+  This program converts .py, .sql, and .md files into .html documentation files with minimal work on the developer's part.
+  <br>
+  <br>
   <br>
   The purpose is to minimise the documentation burden.
   <br>
@@ -319,7 +321,7 @@
    </li>
   </ol>
   <blockquote>
-   python setup.py install [--force]
+   python setup.py install
    <br>
   </blockquote>
   Then, as above you can use mindoc from terminal as follows:
@@ -503,7 +505,7 @@ WHERE this_thing = that_thing
   <a href="https://mermaid-js.github.io/mermaid/">
    the GitHub for mermaid
   </a>
-  to learn more about mermaid.
+  to learn more about MermaidJS. Currently using mermaid version 8.4.6.
   <br>
   <br>
   For example, this markdown like snippet:
@@ -911,10 +913,10 @@ def convert_to_html(pre_html: str) -&gt; str:
     body = re.sub(br+r'[\w\W+]'+pre, pre, body)
 
     # This bit allows the Google Code Prettify to work
-    body = body.replace('code class="', 'code class="prettyprint ')
+    body = body.replace('code ' + 'class="', 'code class="prettyprint ')
 
     # This bit allows the MermaidJS to work
-    body = body.replace('mermaid', 'mermaid')
+    body = body.replace('prettyprint ' + 'lang-mermaid', 'mermaid')
 
     # Put the html together
     html = tag('!DOCTYPE html') + tag('html') + tag('head') + meta + style + endtag('head') + tag('body') + body + script + endtag('body') + endtag('html')
