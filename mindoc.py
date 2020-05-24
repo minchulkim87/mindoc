@@ -52,47 +52,10 @@ The .sql file to be converted must have been written in the following way:
 
 ## Installation
 
-### Install from github.
+### Install using pip.
 
-> pip install git+https://github.com/minchulkim87/mindoc.git@master
+> pip install mindoc
 
-Then use the command from terminal
-
-> mindoc [-w] [file to the code file to convert, can use glob]
-
-For example:
-
-> mindoc mindoc.py
-
-Produces this document.
-
-
-### Locally install
-
-(for those who do not have access to the luxury of pip install)
-
-1. Download this git repository as a zip file and extract.
-2. Open your terminal and navigate to the extracted directory
-3. Install using the setup.py
-
-> python setup.py install
-
-Then, as above you can use mindoc from terminal as follows:
-
-> mindoc [-w] [file to the code file to convert, can use glob]
-
-
-### Without installation
-
-(for those who do not have access to the luxury of any installation)
-
-*Without* installing mindoc, you would need to already have the required packages above.
-
-1. Download the mindoc.py file to the directory you are working in.
-2. Open your terminal and navigate to the directory where the mindoc.py file is.
-3. Type the following command into the terminal
-
-> python -m mindoc [-w] [file path to the code file to convert, can use glob]
 
 ## How to use
 
