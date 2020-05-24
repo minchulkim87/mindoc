@@ -1,9 +1,0 @@
-README.md
-mindoc.py
-setup.py
-mindoc.egg-info/PKG-INFO
-mindoc.egg-info/SOURCES.txt
-mindoc.egg-info/dependency_links.txt
-mindoc.egg-info/entry_points.txt
-mindoc.egg-info/requires.txt
-mindoc.egg-info/top_level.txt
