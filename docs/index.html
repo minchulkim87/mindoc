@@ -165,9 +165,7 @@
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#_py_code_style">.py Code style</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#_sql_code_style">.sql Code style</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 20px;"><a style="color: #333; " href="#installation">Installation</a></p>
-<p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#install_from_github_">Install from github.</a></p>
-<p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#locally_install">Locally install</a></p>
-<p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#without_installation">Without installation</a></p>
+<p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#install_using_pip_">Install using pip.</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 20px;"><a style="color: #333; " href="#how_to_use">How to use</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#basic__py_example">Basic .py Example</a></p>
 <p style="margin-top:0px; margin-bottom: 0px; margin-left: 40px;"><a style="color: #333; " href="#basic__sql_example">Basic .sql Example</a></p>
@@ -272,91 +270,15 @@
    TOC
   </a>
   <br>
-  <h3 id="install_from_github_">
-   Install from github.
+  <h3 id="install_using_pip_">
+   Install using pip.
   </h3>
   <a href="#toc" style="font-size: 10px; color: #555;">
    TOC
   </a>
   <br>
   <blockquote>
-   pip install git+
-   <a href="https://github.com/minchulkim87/mindoc.git@master">
-    https://github.com/minchulkim87/mindoc.git@master
-   </a>
-   <br>
-  </blockquote>
-  Then use the command from terminal
-  <br>
-  <blockquote>
-   mindoc [-w] [file to the code file to convert, can use glob]
-   <br>
-  </blockquote>
-  For example:
-  <br>
-  <blockquote>
-   mindoc mindoc.py
-   <br>
-  </blockquote>
-  Produces this document.
-  <br>
-  <h3 id="locally_install">
-   Locally install
-  </h3>
-  <a href="#toc" style="font-size: 10px; color: #555;">
-   TOC
-  </a>
-  <br>
-  (for those who do not have access to the luxury of pip install)
-  <br>
-  <ol>
-   <li>
-    Download this git repository as a zip file and extract.
-   </li>
-   <li>
-    Open your terminal and navigate to the extracted directory
-   </li>
-   <li>
-    Install using the setup.py
-   </li>
-  </ol>
-  <blockquote>
-   python setup.py install
-   <br>
-  </blockquote>
-  Then, as above you can use mindoc from terminal as follows:
-  <br>
-  <blockquote>
-   mindoc [-w] [file to the code file to convert, can use glob]
-   <br>
-  </blockquote>
-  <h3 id="without_installation">
-   Without installation
-  </h3>
-  <a href="#toc" style="font-size: 10px; color: #555;">
-   TOC
-  </a>
-  <br>
-  (for those who do not have access to the luxury of any installation)
-  <br>
-  <em>
-   Without
-  </em>
-  installing mindoc, you would need to already have the required packages above.
-  <br>
-  <ol>
-   <li>
-    Download the mindoc.py file to the directory you are working in.
-   </li>
-   <li>
-    Open your terminal and navigate to the directory where the mindoc.py file is.
-   </li>
-   <li>
-    Type the following command into the terminal
-   </li>
-  </ol>
-  <blockquote>
-   python -m mindoc [-w] [file path to the code file to convert, can use glob]
+   pip install mindoc
    <br>
   </blockquote>
   <h2 id="how_to_use">
